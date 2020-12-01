@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>{% block title %}Result for Lab{{ lab }}{% endblock %}: {{ score }}/100</h1>
+{% endblock %}
+
+{% block content %}
+	<article class="log">
+		<header>
+			<p>{{ log }}</p>
+		</header>
+	</article>
+{% endblock %}

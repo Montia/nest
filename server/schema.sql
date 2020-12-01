@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS score;
+
+CREATE TABLE user (
+    num INTEGER PRIMARY KEY,
+    name CHAR(10) NOT NULL,
+    passwd INTEGER NOT NULL
+);
+
+CREATE TABLE score (
+    num INTEGER NOT NULL,
+    lab INTEGER NOT NULL,
+    score INTEGER NOT NULL,
+    PRIMARY KEY (num, lab)
+);
+

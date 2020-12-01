@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>{% block title %}Labs (click each Lab to download requirements){% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	{% for score in scores %}
+		<article class="lab">
+			<header>
+				<div>
+					<h1><a href={{ url_for('static', filename='requirements/Nachos3.4-Lab'+score['lab'])+'.docx' }}>{{ 'Lab'+score['lab']}}</a></h1>
+					<p>{{ 'Score: '+score['score'] }}</p>
+				</div>
+				<form action="commit/{{ score['lab'] }}" method="POST" enctype="multipart/form-data">
+					<input type="file" name="nachos.zip" accept=".zip">
+					<input type="submit" value="Commit">
+				</form>
+			</header>
+		</article>
+		{% if not loop.last %}
+			<hr>
+		{% endif %}
+	{% endfor %}
+{% endblock %}
