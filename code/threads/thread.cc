@@ -24,6 +24,13 @@
 					// execution stack, for detecting 
 					// stack overflows
 
+tid_t next_tid = 0;
+
+tid_t GetTid()
+{
+    return currentThread->GetTid();
+}
+
 //----------------------------------------------------------------------
 // Thread::Thread
 // 	Initialize a thread control block, so that we can then call
@@ -41,6 +48,7 @@ Thread::Thread(char* threadName)
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
+    tid = next_tid++; next_tid +=2;
 }
 
 //----------------------------------------------------------------------

@@ -62,6 +62,11 @@ enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
 // external function, dummy routine whose sole job is to call Thread::Print
 extern void ThreadPrint(int arg);	 
 
+// Nest added interface. DO NOT CHANGE!
+// get tid of the running thread
+typedef size_t tid_t;
+extern tid_t GetTid();
+
 // The following class defines a "thread control block" -- which
 // represents a single thread of execution.
 //
@@ -101,6 +106,7 @@ class Thread {
     void setStatus(ThreadStatus st) { status = st; }
     char* getName() { return (name); }
     void Print() { printf("%s, ", name); }
+    tid_t GetTid() { return tid; }
 
   private:
     // some of the private data for this class is listed above
@@ -110,6 +116,7 @@ class Thread {
 					// (If NULL, don't deallocate stack)
     ThreadStatus status;		// ready, running or blocked
     char* name;
+    tid_t tid;
 
     void StackAllocate(VoidFunctionPtr func, void *arg);
     					// Allocate a stack for thread.
