@@ -138,4 +138,4 @@ depend: $(CFILES) $(HFILES)
 	echo '# see make depend above' >> Makefile
 
 clean:
-	rm *.o swtch.s nachos_test
+	rm -f *.o *.result swtch.s nachos_test
