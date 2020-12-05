@@ -49,8 +49,7 @@ THREAD_H =../../threads/copyright.h\
 	../../machine/elevator.h\
 	../../machine/elevatortest.h
 
-THREAD_C =../../threads/main.cc\
-	../../threads/list.cc\
+THREAD_C =../../threads/list.cc\
 	../../threads/scheduler.cc\
 	../../threads/synch.cc \
 	../../threads/synchlist.cc\
@@ -67,7 +66,7 @@ THREAD_C =../../threads/main.cc\
 
 THREAD_S = ../../threads/switch.s
 
-THREAD_O =nest_main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
+THREAD_O =list.o scheduler.o synch.o synchlist.o system.o thread.o \
 	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o elevator.o \
 	elevatortest.o
 

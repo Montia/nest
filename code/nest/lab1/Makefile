@@ -7,7 +7,7 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-DEFINES = -DTHREADS -DTEST_IN_KERNEL
+DEFINES = -DTHREADS
 INCPATH = -I../../threads -I../../machine
 HFILES = $(THREAD_H)
 CFILES = $(THREAD_C)
@@ -18,33 +18,19 @@ CFLAGS = -g -Wall -Wshadow -fpermissive $(INCPATH) $(DEFINES) $(HOST) -DCHANGED 
 include ../Makefile.nest
 include ../../Makefile.dep
 
-%.o: %.cc
-	$(CC) $(CFLAGS) -c $<
-
-%.result: %.o $(OFILES)
-	$(LD) $(OFILES) $(LDFLAGS) $< -o nachos_test
-	./nachos_test -d
+%.result: %.cc $(OFILES)
+	@TESTTYPE=`python -c "print \"l1e3_diff_tid_kernel.cc\".split('.')[0].split('_')[-1]"`; \
+	if [ "$$TESTTYPE" = "kernel" ]; then \
+	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c ../nest_main.cc; \
+	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c $(@:.result=.cc); \
+	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test; \
+	./nachos_test -d > $@; \
+	fi; 
+	# TODO: build nachos_test for test using userprog
 
 #-----------------------------------------------------------------
 # DO NOT DELETE THIS LINE -- make depend uses it
 # DEPENDENCIES MUST END AT END OF FILE
-nest_main.o: ../nest_main.cc /usr/include/stdc-predef.h \
- ../../threads/copyright.h ../../threads/utility.h ../../threads/bool.h \
- ../../machine/sysdep.h ../../threads/copyright.h /usr/include/stdio.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h ../../threads/stdarg.h \
- /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../../threads/system.h ../../threads/thread.h \
- ../../threads/scheduler.h ../../threads/list.h ../../machine/interrupt.h \
- ../../threads/list.h ../../machine/stats.h ../../machine/timer.h \
- ../../threads/utility.h
 list.o: ../../threads/list.cc /usr/include/stdc-predef.h \
  ../../threads/copyright.h ../../threads/list.h ../../threads/utility.h \
  ../../threads/bool.h ../../machine/sysdep.h ../../threads/copyright.h \
@@ -254,9 +240,10 @@ sysdep.o: ../../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../../threads/list.h ../../machine/interrupt.h ../../machine/stats.h \
  ../../machine/timer.h ../../threads/utility.h
 stats.o: ../../machine/stats.cc /usr/include/stdc-predef.h \
- ../../threads/copyright.h ../../threads/utility.h ../../threads/copyright.h \
- ../../threads/bool.h ../../machine/sysdep.h /usr/include/stdio.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ ../../threads/copyright.h ../../threads/utility.h \
+ ../../threads/copyright.h ../../threads/bool.h ../../machine/sysdep.h \
+ /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
@@ -286,9 +273,10 @@ timer.o: ../../machine/timer.cc /usr/include/stdc-predef.h \
  ../../machine/interrupt.h ../../threads/list.h ../../machine/stats.h \
  ../../machine/timer.h
 elevatortest.o: ../../machine/elevatortest.cc /usr/include/stdc-predef.h \
- ../../threads/copyright.h ../../machine/elevatortest.h ../../machine/elevator.h \
- ../../threads/utility.h ../../threads/copyright.h ../../threads/bool.h \
- ../../machine/sysdep.h /usr/include/stdio.h /usr/include/features.h \
+ ../../threads/copyright.h ../../machine/elevatortest.h \
+ ../../machine/elevator.h ../../threads/utility.h \
+ ../../threads/copyright.h ../../threads/bool.h ../../machine/sysdep.h \
+ /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
@@ -303,9 +291,9 @@ elevatortest.o: ../../machine/elevatortest.cc /usr/include/stdc-predef.h \
  ../../threads/synch.h ../../threads/thread.h ../../threads/list.h \
  ../../threads/thread.h
 elevator.o: ../../machine/elevator.cc /usr/include/stdc-predef.h \
- ../../threads/copyright.h ../../machine/elevator.h ../../threads/utility.h \
- ../../threads/copyright.h ../../threads/bool.h ../../machine/sysdep.h \
- /usr/include/stdio.h /usr/include/features.h \
+ ../../threads/copyright.h ../../machine/elevator.h \
+ ../../threads/utility.h ../../threads/copyright.h ../../threads/bool.h \
+ ../../machine/sysdep.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \

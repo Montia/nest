@@ -19,7 +19,7 @@ void PrintTid(int which)
 }
 
 int Nest(void *arg) {
-    DEBUG('n', "Entering Nest()");
+    DEBUG('n', "Entering Nest()\n");
     ASSERT(THREAD_NUM < 10);
 
     PrintTid(0);
