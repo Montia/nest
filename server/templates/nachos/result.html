@@ -7,7 +7,7 @@
 {% block content %}
 	<article class="log">
 		<header>
-			<p>{{ log }}</p>
+			<p>{{ log|safe }}</p>
 		</header>
 	</article>
 {% endblock %}

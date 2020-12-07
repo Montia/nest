@@ -1,13 +1,14 @@
 import os
 import time
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, 
+    request, url_for, current_app
 )
 from werkzeug.exceptions import abort
 
 from server.auth import login_required
 from server.db import get_db
-from nest import test_lab
+from server.nest import test_lab
 
 bp = Blueprint('nachos', __name__)
 
@@ -29,11 +30,16 @@ def index():
 def commit(lab):
     zip_file = request.files['nachos.zip']
     def is_zip_file(filename):
-        return '.' in filename and filename.split('.')[-1] == 'zip'
+        return '.' in filename and \
+            filename.split('.')[-1] == 'zip'
     if not is_zip_file(zip_file.filename):
         return render_template('nachos/result.html', 
-            lab=lab, score=0, log='Uploaded file is not a .zip file')
-    filename = str(g.user['num'])+'_lab'+str(lab)+'_'+str(int(time.time()))+'.zip'
+            lab=lab, score=0, log=
+                'Uploaded file is not a .zip file')
+    filename = os.path.join(current_app.config['UPLOAD_DIR'],
+        str(g.user['num'])+'_lab'+str(lab)+'_'+str(int(time.time()))+'.zip')
+    if not os.path.exists(current_app.config['UPLOAD_DIR']):
+        os.mkdir(current_app.config['UPLOAD_DIR'])
     zip_file.save(filename)
     score, log = test_lab(lab, filename)
     db = get_db()
