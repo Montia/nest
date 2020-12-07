@@ -2,11 +2,11 @@
 #include "system.h"
 
 #ifndef THREAD_NUM
-#define THREAD_NUM 5
+#define THREAD_NUM 3
 #endif
 
 #ifndef PRINT_NUM
-#define PRINT_NUM 3
+#define PRINT_NUM 2
 #endif
 
 void PrintTid(int which)

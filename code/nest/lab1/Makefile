@@ -13,25 +13,10 @@ HFILES = $(THREAD_H)
 CFILES = $(THREAD_C)
 C_OFILES = $(THREAD_O)
 TESTS = l1e3_diff_tid_kernel
-RESULTS = $(addsuffix .result,$(TESTS))
 CFLAGS = -g -Wall -Wshadow -fpermissive $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -m32
 
 include ../Makefile.nest
 include ../../Makefile.dep
-
-nest: $(RESULTS)
-
-%.result: %.cc $(OFILES)
-	@TESTTYPE=`python -c "print \"$@\".split('.')[0].split('_')[-1]"`; \
-	echo $$TESTTYPE \
-	if [ "$$TESTTYPE" = "kernel" ]; then \
-	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c ../nest_main.cc; \
-	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c $(@:.result=.cc); \
-	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test; \
-	./nachos_test -d > $@; \
-	echo $@ has been produced.
-	fi; 
-	@# TODO: build nachos_test for test using userprog
 
 #-----------------------------------------------------------------
 # DO NOT DELETE THIS LINE -- make depend uses it
