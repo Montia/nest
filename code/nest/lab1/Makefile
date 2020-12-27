@@ -12,11 +12,11 @@ INCPATH = -I../../threads -I../../machine
 HFILES = $(THREAD_H)
 CFILES = $(THREAD_C)
 C_OFILES = $(THREAD_O)
-TESTS = l1e3_diff_tid_kernel
+TESTS = l1e3_diff_tid_kernel l1e3_same_uid_kernel l1e4_thread_limit_kernel l1e4_ts_kernel
 CFLAGS = -g -Wall -Wshadow -fpermissive $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -m32
 
 include ../Makefile.nest
-include ../../Makefile.dep
+include ../Makefile.dep
 
 #-----------------------------------------------------------------
 # DO NOT DELETE THIS LINE -- make depend uses it

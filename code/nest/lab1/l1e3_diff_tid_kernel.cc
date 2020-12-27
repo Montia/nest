@@ -9,8 +9,9 @@
 #define PRINT_NUM 2
 #endif
 
-void PrintTid(int which)
+void PrintTid(void *p)
 {
+    int which = (int)p;
     for (int i = 0; i < PRINT_NUM; i++)
     {
 	    DEBUG('n', "*** thread %d's tid is %d ***\n", which, GetTid());
@@ -20,15 +21,20 @@ void PrintTid(int which)
 
 int Nest(void *arg) {
     DEBUG('n', "Entering Nest()\n");
-    ASSERT(THREAD_NUM < 10);
+    char* threadNames[THREAD_NUM+1];
+    threadNames[0] = "main";
 
     PrintTid(0);
     for (int i = 1; i <= THREAD_NUM; i++) 
     {
-        char *threadName = new char[10];
-        strcpy(threadName, "thread1");
-        threadName[6] = i+'0';
-        Thread *t = new Thread(threadName);
+        threadNames[i] = new char[10];
+        sprintf(threadNames[i], "thread%d", i);
+        Thread *t = new Thread(threadNames[i]);
         t->Fork(PrintTid, (void*)i);
     }
+    for (int i = 1; i <= THREAD_NUM; i++) 
+    {
+        delete[] threadNames[i];
+    }
+    return 0;
 }
