@@ -5,18 +5,24 @@
 #define THREAD_NUM 3
 #endif
 
-#ifndef PRINT_NUM
-#define PRINT_NUM 2
+#ifndef WORK_TIME
+#define WORK_TIME 500
 #endif
 
-void PrintUid(void *p)
+void work(int ticks) {
+    ASSERT(interrupt->getLevel() == IntOn);
+    for (int i = 0; i < ticks/10; i++) {
+        interrupt->SetLevel(IntOff);
+        interrupt->SetLevel(IntOn);
+    }
+}
+
+void run(void *p)
 {
     int which = (int)p;
-    for (int i = 0; i < PRINT_NUM; i++)
-    {
-	    DEBUG('n', "*** thread %d's uid is %d ***\n", which, GetUid());
-        currentThread->Yield();
-    }
+    DEBUG('n', "Thread %d starts successfully\n", which);
+    work(WORK_TIME);
+    DEBUG('n', "Thread %d ends successfully\n", which);
 }
 
 int Nest(void *arg) {
@@ -24,17 +30,12 @@ int Nest(void *arg) {
     char* threadNames[THREAD_NUM+1];
     threadNames[0] = "main";
 
-    PrintUid(0);
     for (int i = 1; i <= THREAD_NUM; i++) 
     {
         threadNames[i] = new char[10];
         sprintf(threadNames[i], "thread%d", i);
         Thread *t = new Thread(threadNames[i]);
-        t->Fork(PrintUid, (void*)i);
-    }
-    for (int i = 1; i <= THREAD_NUM; i++) 
-    {
-        delete[] threadNames[i];
+        t->Fork(run, (void*)i);
     }
     return 0;
 }

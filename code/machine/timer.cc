@@ -47,6 +47,9 @@ Timer::Timer(VoidFunctionPtr timerHandler, int callArg, bool doRandom)
     handler = timerHandler;
     arg = callArg; 
 
+    // DO NOT CHANGE DEBUG MESSAGES
+    DEBUG('n', "Timer's interval is set to %d%s\n", TimerTicks, doRandom?" randomly":"");
+
     // schedule the first interrupt from the timer device
     interrupt->Schedule(TimerHandler, (int) this, TimeOfNextInterrupt(), 
 		TimerInt); 

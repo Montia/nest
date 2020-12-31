@@ -32,9 +32,5 @@ int Nest(void *arg) {
         Thread *t = new Thread(threadNames[i]);
         t->Fork(PrintTid, (void*)i);
     }
-    for (int i = 1; i <= THREAD_NUM; i++) 
-    {
-        delete[] threadNames[i];
-    }
     return 0;
 }
