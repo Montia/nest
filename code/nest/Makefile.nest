@@ -140,17 +140,62 @@ depend: $(CFILES) $(HFILES)
 clean:
 	rm -f *.o *.result swtch.s nachos_test
 
+# converts a COFF file to Nachos object format
+coff2noff: ../../bin/coff2noff.c
+	gcc -I../../threads -I../../bin -g -m32 ../../bin/coff2noff.c -o coff2noff
+
 RESULTS = $(addsuffix .result,$(TESTS))
 nest: $(RESULTS)
+
+CROSS_GCCDIR = ../gnu-decstation-ultrix/decstation-ultrix/2.95.3/
+CROSS_CC = $(CROSS_GCCDIR)gcc -B../gnu-decstation-ultrix/
+CROSS_AS = $(CROSS_GCCDIR)as
+CROSS_LD = $(CROSS_GCCDIR)ld
+
+CROSS_CPP = gcc -E
+CROSS_INCDIR =-I../../userprog -I../../threads
+CROSS_CFLAGS = -G 0 -c $(CROSS_INCDIR)
+CROSS_LDFLAGS = -T script -N
+CROSS_ASFLAGS = -mips2
+CROSS_CPPFLAGS = $(CROSS_INCDIR)
+
+start.o: ../../test/start.s ../../userprog/syscall.h
+	$(CROSS_CPP) $(CROSS_CPPFLAGS) ../../test/start.c > strt.s
+	$(CROSS_AS) $(CROSS_ASFLAGS) -o start.o strt.s
+	rm strt.s
 
 %.result: %.cc $(OFILES)
 	@TESTTYPE=`python -c "print \"$@\".split('.')[0].split('_')[-1]"`; \
 	if [ "$$TESTTYPE" = "kernel" ]; then \
-	echo "Compile test case: $*" ; \
-    echo ;\
 	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c ../nest_main.cc && \
 	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c $(@:.result=.cc) && \
 	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test_$* && \
+    rm -f $@ && touch $@; \
+    else \
+    $(MAKE) start.o && \
+	$(CC) $(CFLAGS) -c ../nest_main.cc && \
+	$(LD) $(OFILES) $(LDFLAGS) nest_main.o -o nachos_test_$* && \
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $(@:.result=.cc) && \
+	$(CROSS_LD) $(CROSS_LDFLAGS) start.o $(@:.result=.o) -o $(@:.result=.coff) && \
+    rm -f $@ && touch $@; \
+	fi; 
+	@# TODO: build nachos_test for test using userprog
+
+%.result: %.c $(OFILES)
+	@TESTTYPE=`python -c "print \"$@\".split('.')[0].split('_')[-1]"`; \
+	if [ "$$TESTTYPE" = "kernel" ]; then \
+	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c ../nest_main.cc && \
+	$(CC) $(CFLAGS) -DTEST_IN_KERNEL -c $(@:.result=.cc) && \
+	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test_$* && \
+    rm -f $@ && touch $@; \
+    else \
+    $(MAKE) start.o && \
+	$(CC) $(CFLAGS) -c ../nest_main.cc && \
+	$(LD) $(OFILES) $(LDFLAGS) nest_main.o -o nachos_test_$* && \
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $(@:.result=.c) && \
+	$(CROSS_LD) $(CROSS_LDFLAGS) start.o $(@:.result=.o) -o $(@:.result=.coff) && \
+    $(MAKE) coff2noff && \
+    ./coff2noff $(@:.result=.coff) $(@:.result=.noff) && \
     rm -f $@ && touch $@; \
 	fi; 
 	@# TODO: build nachos_test for test using userprog

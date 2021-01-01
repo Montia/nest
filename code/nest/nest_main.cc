@@ -16,10 +16,7 @@ extern void StartProcess(char *file);
 
 int main(int argc, char **argv)
 {
-    int argCount;			// the number of arguments 
-					// for a particular command
-
-    DEBUG('t', "Entering main");
+    DEBUG('e', "Entering main\n");
     (void) Initialize(argc, argv);
     
 #ifdef TEST_IN_KERNEL
@@ -27,8 +24,16 @@ int main(int argc, char **argv)
 	// TODO: construct arg according to argc and argv
     Nest(arg);
 #else
-	// TODO: construct arg according to argc and argv
-    StartProcess(*(argv + 1));
+    int argCount;
+    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
+	    argCount = 1;
+        if (!strcmp(*argv, "-x")) {        	// run a user program
+	        ASSERT(argc > 1);
+            DEBUG('e', "Identify -x %s\n", *(argv+1));
+            StartProcess(*(argv + 1));
+            argCount = 2;
+        } 
+    }
 #endif
 
     currentThread->Finish();
