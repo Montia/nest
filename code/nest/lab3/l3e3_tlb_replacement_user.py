@@ -50,10 +50,16 @@ def check(lines):
                     Paging fault num {} is less than 1'\
                     .format(line_num+1, fault_num)
                 return False, error_message
+            elif fault_num > 47:
+                error_message = 'Error in line {}: \
+                    Your submitted tlb replacement algorithm should perform not worse than FIFO,\
+                    whose page fault counts 47, but yours counts {}.'\
+                    .format(line_num+1, fault_num)
+                return False, error_message
             continue
     
     if exit_successfully is True:
-        return True, None
+        return True, 'Page fault count: {}'.format(fault_num)
     else:
         error_message = 'Error: syscall Exit() is not called or the debug message is modified'
         return False, error_message

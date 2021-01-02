@@ -161,6 +161,10 @@ Interrupt::OneTick()
 	stats->userTicks += UserTick;
     }
     DEBUG('i', "\n== Tick %d ==\n", stats->totalTicks);
+    if (stats->totalTicks > TIME_LIMIT) {
+        DEBUG('e', "Halt due to time limit %d", TIME_LIMIT);
+        Halt();
+    }
 
 // check any pending interrupts are now ready to fire
     ChangeLevel(IntOn, IntOff);		// first, turn off interrupts

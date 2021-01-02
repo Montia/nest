@@ -38,6 +38,10 @@
 #include "copyright.h"
 #include "list.h"
 
+#ifndef TIME_LIMIT
+#define TIME_LIMIT 50000
+#endif
+
 // Interrupts can be disabled (IntOff) or enabled (IntOn)
 enum IntStatus { IntOff, IntOn };
 

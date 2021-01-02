@@ -12,7 +12,7 @@ INCPATH = -I../../filesys -I../../bin -I../../vm -I../../userprog -I../../thread
 HFILES = $(THREAD_H) $(USERPROG_H) $(VM_H)
 CFILES = $(THREAD_C) $(USERPROG_C) $(VM_C)
 C_OFILES = $(THREAD_O) $(USERPROG_O) $(VM_O)
-TESTS = l3e2_tlb_miss_user
+TESTS = l3e2_tlb_miss_user l3e3_tlb_replacement_user
 CFLAGS = -g -Wall -Wshadow -fpermissive $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -m32
 
 include ../Makefile.nest
