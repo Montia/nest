@@ -131,11 +131,11 @@ depend: $(CFILES) $(HFILES)
 	echo '/^# DO NOT DELETE THIS LINE/+2,$$d' >eddep
 	echo '$$r makedep' >>eddep
 	echo 'w' >>eddep
-	ed - Makefile < eddep
+	ed - $(word 1,$(MAKEFILE_LIST)) < eddep
 	rm eddep makedep 
-	echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
-	echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
-	echo '# see make depend above' >> Makefile
+	echo '# DEPENDENCIES MUST END AT END OF FILE' >> $(word 1,$(MAKEFILE_LIST))
+	echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> $(word 1,$(MAKEFILE_LIST))
+	echo '# see make depend above' >> $(word 1,$(MAKEFILE_LIST))
 
 clean:
 	rm -f *.o *.result swtch.s nachos_test

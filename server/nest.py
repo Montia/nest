@@ -25,6 +25,8 @@ def test_lab(lab, zipfile):
     except OSError:
         pass
     os.mkdir(inflated_dir)
+    # TODO: different user should use different unzipped directory
+    # TODO: unzip procedure should move to nachos.py
     ret = os.system('unzip {} -d {} > {} 2>&1'.format(\
         zipfile, inflated_dir, os.path.join(dest_dir, 'unzip.output')))
     if ret != 0:
@@ -101,45 +103,29 @@ def test_lab(lab, zipfile):
         from score import tests
 
         # produce test results using Makefile
-        if lab == 2:
-            for test in tests:
-                makefile_name = 'Makefile.{}'.format(test)
-                ret = os.system('make -f {0} clean && make -f {0} nest > {1} 2>&1'\
-                    .format(makefile_name, 'make_nest.result'))
-                if ret != 0:
-                    score = 0
-                    test_result = '<h4>Make failed, ret = {}</h4>'.format(ret)
-                    test_result += 'Make\'s output: <br/>'
-                    with open('make_nest.result') as f:
-                        for line in f.readlines():
-                            # if line.startswith('note:'):
-                            #     break
-                            test_result += line.replace('\n', '<br/>')
-                    return score, test_result.decode('utf-8')
-        else:
-            ret = os.system('make depend > {} 2>&1'\
-                .format(os.path.join(dest_dir, 'make_depend.result')))
+        makefile_names = [name for name in os.listdir('.') 
+            if name == 'Makefile' or name.startswith('Makefile.')]
+        for makefile_name in makefile_names:
+            ret = os.system('make -f {} depend > {} 2>&1'\
+                .format(makefile_name, 'make_depend.result'))
             if ret != 0:
                 score = 0
                 test_result = '<h4>Make depend failed, ret = {}</h4>'.format(ret)
                 test_result += 'Make\'s output: <br/>'
-                with open(os.path.join(dest_dir, 'make_depend.result')) as f:
+                with open('make_depend.result') as f:
                     for line in f.readlines():
                         # if line.startswith('note:'):
                         #     break
                         test_result += line.replace('\n', '<br/>')
                 return score, test_result.decode('utf-8')
-            # produce test results using Makefile
-            ret = os.system('make nest > {} 2>&1'\
-                .format(os.path.join(dest_dir, 'make_nest.result')))
+            ret = os.system('make -f {0} clean && make -f {0} nest > {1} 2>&1'\
+                .format(makefile_name, 'make_nest.result'))
             if ret != 0:
                 score = 0
-                test_result = '<h4>Make failed, ret = {}</h4>'.format(ret)
+                test_result = '<h4>Make "{}" failed, ret = {}</h4>'.format(makefile_name, ret)
                 test_result += 'Make\'s output: <br/>'
-                with open(os.path.join(dest_dir, 'make_nest.result')) as f:
+                with open('make_nest.result') as f:
                     for line in f.readlines():
-                        # if line.startswith('note:'):
-                        #     break
                         test_result += line.replace('\n', '<br/>')
                 return score, test_result.decode('utf-8')
         
@@ -149,7 +135,7 @@ def test_lab(lab, zipfile):
             if test.endswith('kernel'):
                 ret = os.system('./nachos_test_{0} -d > {0}.result 2>&1'.format(test))
             elif test.endswith('user'):
-                ret = os.system('./nachos_test_{0} -d -x {0}.noff > {0}.result 2>&1'.format(test))
+                ret = os.system('./nachos_test_{0} -d + -x {0}.noff > {0}.result 2>&1'.format(test))
             else:
                 test_result += '<b>Test {} failed.<br/>{}<br/></b>'.format(test, 'Only support cases ending with"kernel" and "user"')
                 test_result += '<br/>'
@@ -164,13 +150,14 @@ def test_lab(lab, zipfile):
             # test_result += test+'.result\'s output is as follows:<br/>'
             with open(test+'.result') as f:
                 lines = f.readlines()
-            passed, error_message = check(lines)
+            passed, message = check(lines)
             if passed is True:
                 score += tests[test]
-                test_result += '<b>Test {} passed, score: {}.<br/></b>'.format(test, tests[test])
+                test_result += '<b>Test {} passed, score: {}. {}<br/></b>'.format(\
+                    test, tests[test], message.strip('\n') if message is not None else '')
             else:
-                error_message = error_message.strip('\n')
-                test_result += '<b>Test {} failed.<br/>{}<br/></b>'.format(test, error_message)
+                message = message.strip('\n')
+                test_result += '<b>Test {} failed.<br/>{}<br/></b>'.format(test, message)
                 with open(test+'.result') as f:
                     for line_num, line in enumerate(f.readlines()):
                         test_result += '{}\t{}'.format(line_num+1, line).replace('\n', '<br/>')
