@@ -27,12 +27,12 @@ def check(lines):
         ret = is_user_program_exit(line)
         if ret is not None:
             exitCode = ret
-            rightCode = sum(i*i for i in range(1, 11))
+            rightCode = 148832
             if exitCode != rightCode:
                 error_message = 'Error in line {}: \
                     The result of user program returned \
                     by syscall Exit() is wrong'\
-                    .format(line_num+1, fault_num)
+                    .format(line_num+1)
                 return False, error_message
             if exit_successfully is True:
                 error_message = 'Error in line {}: \
@@ -45,16 +45,18 @@ def check(lines):
         ret = is_paging_summary(line)
         if ret is not None:
             fault_num = ret
+            fifo_fault_num = 1216
             if fault_num < 1:
                 error_message = 'Error in line {}: \
                     Paging fault num {} is less than 1'\
                     .format(line_num+1, fault_num)
                 return False, error_message
-            elif fault_num > 47:
+            elif fault_num >= fifo_fault_num:
                 error_message = 'Error in line {}: \
-                    Your submitted tlb replacement algorithm should perform not worse than FIFO,\
-                    whose page fault counts 47, but yours counts {}.'\
-                    .format(line_num+1, fault_num)
+                    Your submitted tlb replacement algorithm should perform better than FIFO,\
+                    whose page fault counts {}, and yours counts {}{}.'\
+                    .format(line_num+1, fifo_fault_num, fault_num, \
+                    ' too' if fault_num == fifo_fault_num else '')
                 return False, error_message
             continue
     

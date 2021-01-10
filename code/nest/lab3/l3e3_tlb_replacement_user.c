@@ -1,24 +1,32 @@
 #include "syscall.h"
 
-#ifndef VEC_LENGTH
-#define VEC_LENGTH 10
+#ifndef MATRIX_M
+#define MATRIX_M 2
 #endif
 
-int a[VEC_LENGTH];
-int b[VEC_LENGTH];
-int c;
+int a[MATRIX_M][32];
+int b[32][MATRIX_M];
+int c[MATRIX_M][MATRIX_M];
 
 int main() 
 {
-    int i;
-    for (i = 1; i <= VEC_LENGTH; i++)
+    int i, j, k, sum;
+    for (i = 0; i < MATRIX_M; i++)
+    for (j = 0; j < 32; j++)
     {
-        a[i] = i;
-        b[i] = i;
+        a[i][j] = i*32+j;
+        b[j][i] = j*MATRIX_M+i;
     }
-    for (i = 1; i <= VEC_LENGTH; i++)
+    for (i = 0; i < MATRIX_M; i++)
+    for (j = 0; j < MATRIX_M; j++)
+    for (k = 0; k < 32; k++)
     {
-        c += a[i] * b[i];
+        c[i][j] += a[i][k] * b[k][j];
     }
-    Exit(c);
+    for (i = 0; i < MATRIX_M; i++)
+    for (j = 0; j < MATRIX_M; j++)
+    {
+        sum += c[i][j];
+    }
+    Exit(sum);
 }

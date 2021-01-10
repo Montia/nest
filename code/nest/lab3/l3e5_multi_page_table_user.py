@@ -4,7 +4,7 @@ from parse_result import *
 from operator import attrgetter
 
 def check(lines):
-    exit_successfully = False
+    exit_successfully = 0
     for line_num, line in enumerate(lines):
         ret = is_unexpected_exception(line)
         if ret is not None:
@@ -27,19 +27,14 @@ def check(lines):
         ret = is_user_program_exit(line)
         if ret is not None:
             exitCode = ret
-            rightCode = sum(i*i for i in range(10))
+            rightCode = sum(i*i for i in range(17))
             if exitCode != rightCode:
                 error_message = 'Error in line {}: \
                     The result of user program returned \
                     by syscall Exit() is wrong'\
                     .format(line_num+1)
                 return False, error_message
-            if exit_successfully is True:
-                error_message = 'Error in line {}: \
-                    Syscall Exit() is called more than 1 time'\
-                    .format(line_num+1)
-                return False, error_message
-            exit_successfully = True
+            exit_successfully += 1
             continue
         
         ret = is_paging_summary(line)
@@ -52,10 +47,10 @@ def check(lines):
                 return False, error_message
             continue
     
-    if exit_successfully is True:
-        return True, None
+    if exit_successfully == 2:
+        return False, 'Success, check the log~'
     else:
-        error_message = 'Error: syscall Exit() is not called or the debug message is modified'
+        error_message = 'Error: there are 2 user processes, but syscall Exit() called {} times'.format('')
         return False, error_message
 
 

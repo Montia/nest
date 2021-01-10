@@ -134,6 +134,8 @@ def test_lab(lab, zipfile):
         for test in tests:
             if test.endswith('kernel'):
                 ret = os.system('./nachos_test_{0} -d > {0}.result 2>&1'.format(test))
+            elif test == 'l3e5_multi_page_table_user':
+                ret = os.system('./nachos_test_{0} -d + -rs --execute-multi 2 {0}.noff > {0}.result 2>&1'.format(test))
             elif test.endswith('user'):
                 ret = os.system('./nachos_test_{0} -d + -x {0}.noff > {0}.result 2>&1'.format(test))
             else:

@@ -1,7 +1,7 @@
 #include "syscall.h"
 
 #ifndef VEC_LENGTH
-#define VEC_LENGTH 10
+#define VEC_LENGTH 17
 #endif
 
 int a[VEC_LENGTH];
