@@ -27,7 +27,7 @@ def check(lines):
         ret = is_user_program_exit(line)
         if ret is not None:
             exitCode = ret
-            rightCode = sum(i*i for i in range(17))
+            rightCode = sum(i*i for i in range(128))
             if exitCode != rightCode:
                 error_message = 'Error in line {}: \
                     The result of user program returned \

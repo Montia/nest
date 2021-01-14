@@ -125,6 +125,22 @@ def is_machine_idle_without_interrupts(line):
         return None
 
 # return true if machine is halting
+def is_unexpected_exception(line):
+    a = re.findall('Unexpected user mode exception (.*) (.*)\n', line)
+    if (len(a) > 0):
+        return int(a[0][0]), int(a[0][1])
+    else:
+        return None
+
+# return true if machine is halting
+def is_user_program_exit(line):
+    a = re.findall('User program exits with code (.*).\n', line)
+    if (len(a) > 0):
+        return int(a[0])
+    else:
+        return None
+
+# return true if machine is halting
 def is_machine_halt(line):
     a = re.findall('Machine halting!\n', line)
     if (len(a) > 0):

@@ -27,7 +27,7 @@ def check(lines):
         ret = is_user_program_exit(line)
         if ret is not None:
             exitCode = ret
-            rightCode = sum(i*i for i in range(17))
+            rightCode = sum(i*i for i in range(512))
             if exitCode != rightCode:
                 error_message = 'Error in line {}: \
                     The result of user program returned \
@@ -37,10 +37,7 @@ def check(lines):
             exit_successfully += 1
             continue
     
-    if exit_successfully == 2:
+    if exit_successfully == 1:
         return True, None
-    else:
-        error_message = 'Error: there are 2 user processes, but syscall Exit() called {} times'.format(exit_successfully)
-        return False, error_message
 
 

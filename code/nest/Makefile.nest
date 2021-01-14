@@ -91,9 +91,9 @@ USERPROG_C = ../../userprog/addrspace.cc\
 USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
 	mipssim.o translate.o
 
-VM_H = 
-VM_C = 
-VM_O = 
+VM_H = ../../vm/vm.h
+VM_C = ../../vm/vm.cc
+VM_O = vm.o
 
 FILESYS_H =../../filesys/directory.h \
 	../../filesys/filehdr.h\
@@ -172,7 +172,7 @@ start.o: ../../test/start.s ../../userprog/syscall.h
 	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test_$* && \
     rm -f $@ && touch $@; \
     else \
-    $(MAKE) start.o && \
+    $(MAKE) -f $(word 1,$(MAKEFILE_LIST)) start.o && \
 	$(CC) $(CFLAGS) -c ../nest_main.cc && \
 	$(LD) $(OFILES) $(LDFLAGS) nest_main.o -o nachos_test_$* && \
 	$(CROSS_CC) $(CROSS_CFLAGS) -c $(@:.result=.cc) && \
@@ -189,13 +189,12 @@ start.o: ../../test/start.s ../../userprog/syscall.h
 	$(LD) $(OFILES) $(LDFLAGS) $(@:.result=.o) nest_main.o -o nachos_test_$* && \
     rm -f $@ && touch $@; \
     else \
-    $(MAKE) start.o && \
+    $(MAKE) -f $(word 1,$(MAKEFILE_LIST)) start.o && \
 	$(CC) $(CFLAGS) -c ../nest_main.cc && \
 	$(LD) $(OFILES) $(LDFLAGS) nest_main.o -o nachos_test_$* && \
 	$(CROSS_CC) $(CROSS_CFLAGS) -c $(@:.result=.c) && \
 	$(CROSS_LD) $(CROSS_LDFLAGS) start.o $(@:.result=.o) -o $(@:.result=.coff) && \
-    $(MAKE) coff2noff && \
+    $(MAKE) -f $(word 1,$(MAKEFILE_LIST)) coff2noff && \
     ./coff2noff $(@:.result=.coff) $(@:.result=.noff) && \
     rm -f $@ && touch $@; \
 	fi; 
-	@# TODO: build nachos_test for test using userprog
