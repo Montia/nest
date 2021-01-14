@@ -1,12 +1,9 @@
 #include <cstring>
 #include "system.h"
+#include "synch.h"
 
 #ifndef THREAD_NUM
 #define THREAD_NUM 3
-#endif
-
-#ifndef WORK_TIME
-#define WORK_TIME 500
 #endif
 
 void work(int ticks) {
@@ -17,12 +14,17 @@ void work(int ticks) {
     }
 }
 
+Lock lock("l4e3_lock");
+
 void run(void *p)
 {
-    int which = (int)p;
-    DEBUG('e', "Thread %d starts successfully\n", which);
-    work(WORK_TIME);
-    DEBUG('e', "Thread %d ends successfully\n", which);
+    DEBUG('e', "%s begins\n", currentThread->getName());
+    lock.Acquire();
+    DEBUG('e', "%s acquired lock\n", currentThread->getName());
+    work(1000);
+    DEBUG('e', "%s finished work\n", currentThread->getName());
+    lock.Release();
+    DEBUG('e', "%s released lock\n", currentThread->getName());
 }
 
 int Nest(void *arg) {
@@ -37,5 +39,8 @@ int Nest(void *arg) {
         Thread *t = new Thread(threadNames[i]);
         t->Fork(run, (void*)i);
     }
+
+    currentThread->Yield();
+
     return 0;
 }

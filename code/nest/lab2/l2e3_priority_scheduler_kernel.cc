@@ -8,11 +8,11 @@
 void stub(void *p)
 {
     int which = (int)p;
-    DEBUG('n', "Thread %d runs successfully\n", which);
+    DEBUG('e', "Thread %d runs successfully\n", which);
 }
 
 int Nest(void *arg) {
-    DEBUG('n', "Entering Nest()\n");
+    DEBUG('e', "Entering Nest()\n");
     char* threadNames[THREAD_NUM+1];
     threadNames[0] = "main";
     currentThread->setPriority(9);

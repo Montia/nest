@@ -39,5 +39,8 @@ def check(lines):
     
     if exit_successfully == 1:
         return True, None
+    else:
+        error_message = 'Error: there are 2 user processes, but syscall Exit() called {} times'.format(exit_successfully)
+        return False, error_message
 
 

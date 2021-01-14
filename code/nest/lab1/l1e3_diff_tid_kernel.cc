@@ -14,13 +14,13 @@ void PrintTid(void *p)
     int which = (int)p;
     for (int i = 0; i < PRINT_NUM; i++)
     {
-	    DEBUG('n', "*** thread %d's tid is %d ***\n", which, GetTid());
+	    DEBUG('e', "*** thread %d's tid is %d ***\n", which, GetTid());
         currentThread->Yield();
     }
 }
 
 int Nest(void *arg) {
-    DEBUG('n', "Entering Nest()\n");
+    DEBUG('e', "Entering Nest()\n");
     char* threadNames[THREAD_NUM+1];
     threadNames[0] = "main";
 

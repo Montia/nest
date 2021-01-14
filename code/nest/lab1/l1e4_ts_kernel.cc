@@ -14,14 +14,14 @@ void call_ts(void* p)
     int which = (int)p;
     for (int i = 0; i < TS_NUM; i++)
     {
-        DEBUG('n', "Call ts() from thread %d\n", which);
+        DEBUG('e', "Call ts() from thread %d\n", which);
 	    ts();
         currentThread->Yield();
     }
 }
 
 int Nest(void *arg) {
-    DEBUG('n', "Entering Nest()\n");
+    DEBUG('e', "Entering Nest()\n");
     char* threadNames[THREAD_NUM+1];
     threadNames[0] = "main";
 
@@ -33,7 +33,7 @@ int Nest(void *arg) {
         int ret = t->Fork(call_ts, (void*)i);
         if (ret != 0) 
         {
-            DEBUG('n', "Forking thread %s failed!", threadNames[i]);
+            DEBUG('e', "Forking thread %s failed!", threadNames[i]);
             return -1;
         }
     }

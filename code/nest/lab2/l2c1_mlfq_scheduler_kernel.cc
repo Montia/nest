@@ -20,7 +20,7 @@ void work(int ticks) {
 void run(void *p)
 {
     int which = (int)p;
-    DEBUG('n', "Thread %d starts successfully\n", which);
+    DEBUG('e', "Thread %d starts successfully\n", which);
     if (which <= THREAD_NUM)
     {
         work(WORK_TIME*(THREAD_NUM+2-which));
@@ -40,11 +40,11 @@ void run(void *p)
             t->Fork(run, (void*)(THREAD_NUM+i));
         }
     }
-    DEBUG('n', "Thread %d ends successfully\n", which);
+    DEBUG('e', "Thread %d ends successfully\n", which);
 }
 
 int Nest(void *arg) {
-    DEBUG('n', "Entering Nest()\n");
+    DEBUG('e', "Entering Nest()\n");
     char* threadNames[THREAD_NUM+1];
     threadNames[0] = "main";
 
