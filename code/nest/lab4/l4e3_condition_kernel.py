@@ -66,7 +66,6 @@ def check(lines):
     if finished == THREAD_NUM:
         return True, None
     else:
-        error_message = 'Error in line {}: \
-            There are {} working threads, but {} finished working'\
-            .format(line_num+1, THREAD_NUM, finished)
+        error_message = 'There are {} working threads, but {} finished working'\
+            .format(THREAD_NUM, finished)
         return False, error_message

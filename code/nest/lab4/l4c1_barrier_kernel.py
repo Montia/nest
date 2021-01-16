@@ -75,7 +75,6 @@ def check(lines):
     if post_called == PHASE_NUM:
         return True, None
     else:
-        error_message = 'Error in line {}: \
-            There are {} phases, but postPhaseAction is called {} times.'\
-            .format(line_num+1, THREAD_NUM, finished)
+        error_message = 'There are {} phases, but postPhaseAction is called {} times.'\
+            .format(THREAD_NUM, finished)
         return False, error_message
